@@ -42,13 +42,15 @@ do
     echo '      3) Hour'
     echo ''
     read -p 'Enter your selection: ' ftp_frame
-    case $FTP_FRAME in
+    case $ftp_frame in
         1)
             ftp_frame="s";
+            ftp_time="1"
             break
             ;;
         2)
             ftp_frame="m";
+
             break
             ;;
         3)
@@ -92,7 +94,11 @@ do
     read -p 'Select a service: ' service
     case $service in
         1)
-            change_dc_ftp
+            change_dc_ftp;
+            #
+            #   DEV BREAK
+            #
+            break
             ;;
         2)
             change_dc_dns
@@ -123,8 +129,11 @@ do
 done
 }
 
+
+change_bifrozt_dc
+
 cat << _xXx_
-$tcp_frwd --dport 20:21 $state_new --limit $PKTS/$FTP_FRAME --limit-burst $PKTS -j LOG --log-prefix "BIFROZT - FTP: " --log-level 7
+$tcp_frwd --dport 20:21 $state_new --limit $ftp_pkts/$ftp_frame --limit-burst $ftp_pkts -j LOG --log-prefix "BIFROZT - FTP: " --log-level 7
 $tcp_frwd --dport 20:21 $drop_new --seconds $ftp_time --hitcount $ftp_pkts -j DROP
 _xXx_
 #
